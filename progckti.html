@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشروع الاستكشاف العلمي والتقني 2</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000000;
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        #space-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50px 160px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 130px 80px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 160px 120px, #ffffff, rgba(0,0,0,0));
+            background-repeat: repeat; background-size: 200px 200px;
+            animation: moveStars 100s linear infinite;
+        }
+        @keyframes moveStars { from {background-position: 0 0;} to {background-position: -10000px 5000px;} }
+
+        .hero-section {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 20px; position: relative;
+        }
+        
+        #faq-avatar {
+            width: 250px; height: 400px;
+            background-image: url('https://i.postimg.cc/XqtTc8md/tnzyl.png');
+            background-size: 500% 100%;
+            background-position: 0% 0;
+            transition: background-position 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 20px; z-index: 10;
+        }
+
+        .faq-pose-1 { background-position: 0% 0 !important; }
+        .faq-pose-2 { background-position: 25% 0 !important; }
+        .faq-pose-3 { background-position: 50% 0 !important; }
+        .faq-pose-4 { background-position: 75% 0 !important; }
+        .faq-pose-5 { background-position: 100% 0 !important; }
+
+        .faq-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; max-width: 900px; width: 100%; position: relative; z-index: 20;
+            perspective: 1200px; 
+        }
+        .faq-card {
+            background: rgba(30, 30, 30, 0.6); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px;
+            padding: 25px 20px; cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center; font-weight: bold; font-size: 1.05rem;
+            transform-style: preserve-3d;
+        }
+        .faq-card:hover { 
+            background: rgba(50, 50, 50, 0.9); border-color: #ffffff;
+            transform: translateY(-10px) rotateX(10deg) rotateY(-5deg) translateZ(20px);
+            box-shadow: -10px 15px 25px rgba(255, 255, 255, 0.1), inset 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+
+        #sticky-avatar {
+            position: fixed; top: 20px; left: 20px; width: 140px; height: 300px;
+            background-image: url('https://i.postimg.cc/DyjcD0zS/0f3f782a-017c-4b5b-8d1a-54e9c04c8b14-removebg-preview.png');
+            background-size: 400% 100%;
+            background-repeat: no-repeat; z-index: 1000;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .pose-1 { background-position: 0% 0; }
+        .pose-2 { background-position: 33.33% 0; }
+        .pose-3 { background-position: 66.66% 0; }
+        .pose-4 { background-position: 100% 0; }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 2000; justify-content: center; align-items: center;
+            perspective: 1500px;
+        }
+        .modal-content {
+            background: #0a0a0a; border: 1px solid rgba(255,255,255,0.4); border-radius: 12px;
+            padding: 40px; max-width: 500px; width: 90%; text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+            box-shadow: 0 20px 50px rgba(255,255,255,0.1);
+        }
+
+        .close-btn { margin-top: 30px; padding: 12px 30px; background: transparent; color: #ffffff; border: 1px solid #ffffff; cursor: pointer; font-weight: bold; border-radius: 8px; transition: 0.3s; font-size: 1rem;}
+        .close-btn:hover { background: #ffffff; color: #000; transform: scale(1.1) translateZ(30px); }
+
+        .page-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+        
+        /* إطار عرض الصفحات الست كصور مطابقة تماماً للملف الأصلي */
+        .page-img-container {
+            width: 100%; max-width: 800px; background: #fff; border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8); overflow: hidden;
+            opacity: 0; transform: translateY(50px); transition: all 0.6s ease-out;
+        }
+        .page-img-container.visible { opacity: 1; transform: translateY(0); }
+        .page-img-container img { width: 100%; height: auto; display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="space-bg"></div>
+    <div id="sticky-avatar" class="pose-1"></div>
+
+    <div class="hero-section" id="hero">
+        <h1 style="color: #fff; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,255,255,0.3);">كواليس المشروع: تقرير التأمل</h1>
+        
+        <div id="faq-avatar" class="faq-pose-1"></div>
+
+        <div class="faq-grid">
+            <div class="faq-card" onclick="askQuestion(2, 'تعلمت أن الرقم المجرد لا قيمة له ما لم يوضع في سياقه مع وحدته ومصدره ونسبته من المجتمع الكلي، ومهارة تنظيم البيانات وتحويلها لجداول ورسومات بيانية محايدة.')">ما الذي تم استفادته من خلال تنفيذ هذا النشاط وربطه بالمسار؟</div>
+            <div class="faq-card" onclick="askQuestion(3, 'التردد في اختيار نوع الرسم البياني الأنسب وتحديد تدريج المحور الرأسي. تغلبت عليها بتطبيق القاعدة الإحصائية واختيار الأعمدة البيانية وتدريج المحور من الصفر.')">ما هي العوائق التي واجهتها خلال التنفيذ وكيف تغلبت عليها؟</div>
+            <div class="faq-card" onclick="askQuestion(4, 'تسجيل الأعداد المطلقة فقط في مسودة الجدول الأولى دون ذكر النسب المئوية. حليتها بإضافة عمود النسبة المئوية مقترناً بحجم العينة الكلي (N=40).')">ما هي الأخطاء التي وقعت فيها وكيف قمت بحلها؟</div>
+            <div class="faq-card" onclick="askQuestion(3, 'توقعت تشتت أعداد المشاركين وعدم وجود نمط منتظم للتزايد، وتوقع تساوياً تقريبياً بين نسب تفضيل الأنشطة المختلفة.')">ما الذي توقعته من نشاطك قبل البدء؟</div>
+            <div class="faq-card" onclick="askQuestion(5, 'كانت مطابقة جزئياً في تفضيل النشاط العلمي كنسبة أعلى، وخالفت توقعي بوجود زيادة خطية منتظمة تحكمها قاعدة رياضية صريحة قابلة للتنبؤ.')">وهل كانت النتيجة النهائية مطابقة لتوقعك؟</div>
+        </div>
+        <p style="margin-top: 40px; color: #888; font-size: 0.95rem;">▼ اسحب للأسفل لعرض صفحات المشروع الكاملة ▼</p>
+    </div>
+
+    <div id="answer-modal" class="modal">
+        <div class="modal-content" id="modal-box">
+            <h3 style="color:#ffffff; margin-top:0; border-bottom: 1px solid #444; padding-bottom: 10px;">الجواب الإحصائي:</h3>
+            <p id="answer-text" style="color:#ddd; font-size: 1.1rem; line-height: 1.8; margin-top: 20px;"></p>
+            <button class="close-btn" onclick="closeModal()">استمرار</button>
+        </div>
+    </div>
+
+    <!-- عرض الصفحات الست كصور مطابقة لملفك الأصلي تماماً -->
+    <div class="page-section" id="page-1"><div class="page-img-container"><img src="IMG1 (2).png" alt="الصفحة الأولى"></div></div>
+    <div class="page-section" id="page-2"><div class="page-img-container"><img src="IMG2 (2).png" alt="الصفحة الثانية"></div></div>
+    <div class="page-section" id="page-3"><div class="page-img-container"><img src="IMG3 (2).png" alt="الصفحة الثالثة"></div></div>
+    <div class="page-section" id="page-4"><div class="page-img-container"><img src="IMG4.png" alt="الصفحة الرابعة"></div></div>
+    <div class="page-section" id="page-5"><div class="page-img-container"><img src="IMG5.PNG" alt="الصفحة الخامسة"></div></div>
+    <div class="page-section" id="page-6"><div class="page-img-container"><img src="IMG6.png" alt="الصفحة السادسة"></div></div>
+
+    <script>
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const heroHeight = document.getElementById('hero').offsetHeight;
+            const sticker = document.getElementById('sticky-avatar');
+            if(winScroll > heroHeight - 150) {
+                sticker.style.opacity = '1';
+            } else {
+                sticker.style.opacity = '0';
+            }
+        };
+
+        const faqAvatar = document.getElementById('faq-avatar');
+        const modalBox = document.getElementById('modal-box');
+
+        function askQuestion(poseNumber, answerText) {
+            faqAvatar.className = `faq-pose-${poseNumber}`;
+            document.getElementById('answer-text').innerText = answerText;
+            document.getElementById('answer-modal').style.display = 'flex';
+            modalBox.style.transform = 'scale(1) rotateX(0deg) rotateY(0deg)';
+        }
+
+        function closeModal() {
+            document.getElementById('answer-modal').style.display = 'none';
+            faqAvatar.className = 'faq-pose-1';
+        }
+
+        modalBox.addEventListener('mousemove', (e) => {
+            const rect = modalBox.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -15;
+            const rotateY = ((x - centerX) / centerX) * 15;
+            
+            modalBox.style.transform = `perspective(1000px) scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            modalBox.style.boxShadow = `${-rotateY}px ${rotateX}px 30px rgba(255, 255, 255, 0.15)`;
+        });
+
+        modalBox.addEventListener('mouseleave', () => {
+            modalBox.style.transform = `perspective(1000px) scale(1) rotateX(0deg) rotateY(0deg)`;
+            modalBox.style.boxShadow = `0 20px 50px rgba(255,255,255,0.1)`;
+        });
+
+        const stickyAvatar = document.getElementById('sticky-avatar');
+        let currentStickyPose = 1;
+
+        function changeStickyPose(newPose) {
+            if (currentStickyPose === newPose) return;
+            stickyAvatar.className = `pose-${newPose}`;
+            currentStickyPose = newPose;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const container = el.querySelector('.page-img-container');
+                    if(container) container.classList.add('visible');
+                    
+                    // ربط وضعيات الستيكر بالصفحات
+                    if(el.id === 'page-1') changeStickyPose(1);
+                    if(el.id === 'page-2') changeStickyPose(2);
+                    if(el.id === 'page-3') changeStickyPose(3);
+                    if(el.id === 'page-4') changeStickyPose(4);
+                    if(el.id === 'page-5') changeStickyPose(3);
+                    if(el.id === 'page-6') changeStickyPose(4);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.page-section').forEach(sec => observer.observe(sec));
+    </script>
+</body>
+</html>
